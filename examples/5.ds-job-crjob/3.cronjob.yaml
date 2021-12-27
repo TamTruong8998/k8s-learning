@@ -1,0 +1,28 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: mycronjob
+  labels:
+    app: my-love
+spec:
+  # Một phút chạy một Job
+  schedule: "*/1 * * * *"
+  # Số Job lưu lại
+  successfulJobsHistoryLimit: 3
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 15
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      completions: 20
+      activeDeadlineSeconds: 85
+      template:
+        spec:
+          containers:
+          - name: busybox
+            image: busybox
+            args:
+            - /bin/sh
+            - -c
+            - date; echo "Job in CronJob"
+          restartPolicy: Never
